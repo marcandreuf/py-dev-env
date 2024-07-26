@@ -1,8 +1,7 @@
 services:
   python-dev-env-container:
     build:      
-      context: .
-      dockerfile: docker/Dockerfile
+      context: .      
       args:
         - ENV_USER=${ENV_USER}
         - ENV_USER_ID=${ENV_USER_ID}

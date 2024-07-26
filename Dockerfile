@@ -4,6 +4,8 @@ FROM ubuntu:latest
 ARG ENV_USER=ubuntu
 ARG ENV_USER_ID=1000
 
+ENV DEFAULT_IMG_USER="ubuntu"
+
 # Install build tools
 RUN apt-get update && \
     apt-get upgrade -y && \
@@ -16,25 +18,24 @@ RUN apt-get update && \
 # Set default shell to bash
 SHELL ["/bin/bash", "-c"]
 
-# Create a new user with a specific user id if the provided user id is not 1000.
-
+# Setup dev user.
 RUN echo "Arg user: ${ENV_USER} , id: ${ENV_USER_ID}" && \    
     if [ "$ENV_USER_ID" -eq 1000 ]; then \
-          echo "Use a different user id as the defautl ubuntu user has id 1000."; \
+        echo "Use a different user id as the defautl ubuntu user has id 1000."; \
+        exit 1; \        
     else \
-       echo "Creating user '${ENV_USER}' with id '${ENV_USER_ID}'"; \
-       mkdir -p /home/${ENV_USER}; \
-       useradd -G www-data,root -u ${ENV_USER_ID} -d /home/${ENV_USER} ${ENV_USER}; \
-       chown -R ${ENV_USER}:${ENV_USER} /home/${ENV_USER}; \
-    fi;
+        echo "Creating user '${ENV_USER}' with id '${ENV_USER_ID}'"; \
+        mkdir -p /home/${ENV_USER}; \
+        useradd -G www-data,root -u ${ENV_USER_ID} -d /home/${ENV_USER} ${ENV_USER}; \
+        chown -R ${ENV_USER}:${ENV_USER} /home/${ENV_USER}; \
+    fi; \
+    # Add the new user to the sudo group 
+    usermod -aG sudo $ENV_USER; \
+    # Allow passwordless sudo for users in the sudo group
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
-# Add the new user to the sudo group
-RUN usermod -aG sudo $ENV_USER
-
-# Allow passwordless sudo for users in the sudo group
-RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
-
-# Switch to the dev user
+# # Switch to the dev user
+RUN echo "Set docker user to ${ENV_USER}";
 USER ${ENV_USER}
 WORKDIR /ws
 
