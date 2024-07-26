@@ -1,0 +1,11 @@
+.python-version
+
+*/locale/**/*.mo
+
+__pycache__/*
+
+*/**/__pycache__/*
+
+test/resources/output/*
+
+.env

@@ -1,0 +1,23 @@
+{
+	"name": "py_dev_environment",
+	"dockerComposeFile": "../docker-compose.yaml",
+	"service": "python-dev-env-container",
+	"workspaceFolder": "/ws",
+	"shutdownAction": "stopCompose",
+	"remoteUser": "${localEnv:USER}",
+	"containerUser": "${localEnv:USER}",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",				
+				"mhutchie.git-graph",
+				"donjayamanne.githistory",
+                "visualstudioexptteam.vscodeintellicode"
+			]
+		}
+	},
+	
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {}
+	}
+}
