@@ -20,9 +20,11 @@ SHELL ["/bin/bash", "-c"]
 
 # Setup dev user.
 RUN echo "Arg user: ${ENV_USER} , id: ${ENV_USER_ID}" && \    
-    if [ "$ENV_USER_ID" -eq 1000 ]; then \
+    if ["${ENV_USER}" != "ubuntu"]; then \
+        echo "Using defautl ubuntu user."; \
+    elif ["${ENV_USER}" != "ubuntu"] && ["${ENV_USER_ID}" -eq 1000 ]; then \
         echo "Use a different user id as the defautl ubuntu user has id 1000."; \
-        exit 1; \        
+        exit 1; \
     else \
         echo "Creating user '${ENV_USER}' with id '${ENV_USER_ID}'"; \
         mkdir -p /home/${ENV_USER}; \
@@ -41,26 +43,33 @@ WORKDIR /ws
 
 # Install pyenv
 RUN curl https://pyenv.run | bash && \
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.bashrc && \
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.bashrc && \
+echo 'export PYENV_ROOT="$HOME"/.pyenv' >> ~/.bashrc && \
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT"/bin:$PATH' >> ~/.bashrc && \
 echo 'eval "$(pyenv init -)"' >> ~/.bashrc && \
-echo 'export PYENV_ROOT="$HOME/.pyenv"' >> ~/.profile && \
-echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"' >> ~/.profile && \
+echo 'export PYENV_ROOT="$HOME"/.pyenv' >> ~/.profile && \
+echo 'command -v pyenv >/dev/null || export PATH="$PYENV_ROOT"/bin:$PATH' >> ~/.profile && \
 echo 'eval "$(pyenv init -)"' >> ~/.profile
 
+# Install python
+RUN id; \
+    source "$HOME/".bashrc; \
+    pyenv --help
 
 # Allow pipx actions with --global argument
 RUN pipx ensurepath && \
     pipx install pdm  && \
     pipx list
 
-# Install python 3.12.1
-RUN source ~/.bashrc && \
-    pyenv install 3.12.1 && \
-    pyenv virtualenv 3.12.1 devenv && \
-    pyenv activate devenv && \
-    python3.12 -m pip install --upgrade pip && \
-    python -V
+
+    
+
+    # && \
+    
+    # pyenv install 3.12.1 && \
+    # pyenv virtualenv 3.12.1 devenv && \
+    # pyenv activate devenv && \
+    # python3.12 -m pip install --upgrade pip && \
+    # python -V
     
 # Uncomment the following lines to make the python3.12.1 the  
 # default python version in the container.
