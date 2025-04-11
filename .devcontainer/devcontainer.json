@@ -24,7 +24,9 @@
 				"ms-python.python",
 				"mhutchie.git-graph",
 				"donjayamanne.githistory",
-				"visualstudioexptteam.vscodeintellicode"
+				"visualstudioexptteam.vscodeintellicode",
+				"github.copilot",
+				"github.copilot-chat"
 			]
 		}
 	}
