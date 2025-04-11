@@ -1,0 +1,19 @@
+name: ${APP}-dev-env
+
+services:
+  dev-env:
+    build:      
+      context: .      
+      args:
+        - ENV_USER=${ENV_USER}
+        - ENV_USER_ID=${ENV_USER_ID}
+    image: ${APP}-dev-img
+    container_name: ${APP}-dev-container
+    volumes:
+      - ${PWD}:/home/ubuntu/workspace
+    env_file:
+      - .env
+    tty: true
+    stdin_open: true
+    restart: unless-stopped
+    

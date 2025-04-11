@@ -1,23 +1,31 @@
 {
-	"name": "py_dev_environment",
-	"dockerComposeFile": "../docker-compose.yaml",
-	"service": "python-dev-env-container",
-	"workspaceFolder": "/ws",
+	"name": "Python Dev Environment",
+	"dockerComposeFile": "../docker/docker-compose.yaml",
+	"service": "dev-env",
+	"workspaceFolder": "/home/ubuntu/workspace",
 	"shutdownAction": "stopCompose",
-	"remoteUser": "${localEnv:USER}",
-	"containerUser": "${localEnv:USER}",
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"ms-python.python",				
-				"mhutchie.git-graph",
-				"donjayamanne.githistory",
-                "visualstudioexptteam.vscodeintellicode"
-			]
-		}
-	},
-	
+	"remoteUser": "ubuntu",
+	"containerUser": "ubuntu",
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {}
+	},
+	"mounts": [
+		"source=${localEnv:HOME}/.gitconfig,target=/home/ubuntu/.gitconfig,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh/id_ed25519,target=/home/ubuntu/.ssh/id_ed25519,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh/known_hosts,target=/home/ubuntu/.ssh/known_hosts,type=bind,consistency=cached"
+	],
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"extensions.ignoreRecommendations": false,
+				"terminal.integrated.shell.linux": "/bin/bash"
+			},
+			"extensions": [
+				"ms-python.python",
+				"mhutchie.git-graph",
+				"donjayamanne.githistory",
+				"visualstudioexptteam.vscodeintellicode"
+			]
+		}
 	}
 }
